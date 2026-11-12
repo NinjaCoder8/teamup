@@ -32,16 +32,16 @@ function save() {
 }
 
 function canJoin(team) {
-  return data.people.filter(p => p.teamId === team.id).length <= MAX_TEAM;
+  return data.people.filter(person => person.teamId === team.id).length <= MAX_TEAM;
 }
 
 function joinTeam(personId, teamId) {
-  const team = data.teams.find(t => t.id === teamId);
+  const team = data.teams.find(entry => entry.id === teamId);
   if (!canJoin(team)) {
     alert("This team is full.");
     return;
   }
-  const person = data.people.find(p => p.id === personId);
+  const person = data.people.find(entry => entry.id === personId);
   person.teamId = teamId;
   save();
   render();
@@ -77,14 +77,14 @@ function render() {
   // people looking for a team
   const found = searchPeople(document.getElementById("search").value);
   let peopleHtml = "";
-  for (const p of found) {
+  for (const person of found) {
     let chips = "";
-    for (const s of p.skills) {
-      chips += `<span class="chip">${s}</span>`;
+    for (const skill of person.skills) {
+      chips += `<span class="chip">${skill}</span>`;
     }
     peopleHtml += `
       <div class="card">
-        <h3>${p.name}</h3>
+        <h3>${person.name}</h3>
         <div class="chips">${chips}</div>
       </div>`;
   }
@@ -94,16 +94,16 @@ function render() {
   document.getElementById("people").innerHTML = peopleHtml;
 
   // teams
-  const solo = data.people.filter(p => p.teamId === null);
+  const solo = data.people.filter(person => person.teamId === null);
   let teamsHtml = "";
-  for (const t of searchTeams(document.getElementById("teamSearch").value)) {
-    const members = data.people.filter(p => p.teamId === t.id);
+  for (const team of searchTeams(document.getElementById("teamSearch").value)) {
+    const members = data.people.filter(person => person.teamId === team.id);
     let names = "";
-    for (const m of members) {
+    for (const member of members) {
       if (names !== "") {
         names += ", ";
       }
-      names += m.name;
+      names += member.name;
     }
     if (names === "") {
       names = "No members yet";
@@ -113,18 +113,18 @@ function render() {
       warning = '<p class="full">Not a valid team yet</p>';
     }
     let options = "";
-    for (const p of solo) {
-      options += `<option value="${p.id}">${p.name}</option>`;
+    for (const person of solo) {
+      options += `<option value="${person.id}">${person.name}</option>`;
     }
     teamsHtml += `
       <div class="card">
-        <h3>${t.name}</h3>
-        <p class="muted">${t.idea}</p>
+        <h3>${team.name}</h3>
+        <p class="muted">${team.idea}</p>
         <p>${names} <span class="muted">(${members.length}/${MAX_TEAM})</span></p>
         ${warning}
         <div class="row">
-          <select id="join-${t.id}">${options}</select>
-          <button onclick="joinTeam(Number(document.getElementById('join-${t.id}').value), ${t.id})">Join</button>
+          <select id="join-${team.id}">${options}</select>
+          <button onclick="joinTeam(Number(document.getElementById('join-${team.id}').value), ${team.id})">Join</button>
         </div>
       </div>`;
   }
@@ -132,24 +132,24 @@ function render() {
 
   // countdown
   const ms = DEADLINE - new Date();
-  const d = Math.floor(ms / 86400000);
-  const h = Math.floor(ms / 3600000) % 24;
-  const m = Math.floor(ms / 60000) % 60;
-  document.getElementById("countdown").textContent = `Sign-ups close in ${d}d ${h}h ${m}m`;
+  const days = Math.floor(ms / 86400000);
+  const hours = Math.floor(ms / 3600000) % 24;
+  const minutes = Math.floor(ms / 60000) % 60;
+  document.getElementById("countdown").textContent = `Sign-ups close in ${days}d ${hours}h ${minutes}m`;
 }
 
-document.getElementById("signup").addEventListener("submit", e => {
-  e.preventDefault();
+document.getElementById("signup").addEventListener("submit", event => {
+  event.preventDefault();
   const name = document.getElementById("name").value.trim();
   const skillsText = document.getElementById("skills").value;
   if (name !== "") {
     if (data.people.length < 500) {
       let skills = [];
       if (skillsText !== "") {
-        for (const s of skillsText.split(",")) {
-          if (s.trim() !== "") {
-            if (!skills.includes(s.trim())) {
-              skills.push(s.trim());
+        for (const skill of skillsText.split(",")) {
+          if (skill.trim() !== "") {
+            if (!skills.includes(skill.trim())) {
+              skills.push(skill.trim());
             }
           }
         }
@@ -157,7 +157,7 @@ document.getElementById("signup").addEventListener("submit", e => {
       if (skills.length > 0 || confirm("Sign up with no skills?")) {
         data.people.push({ id: Date.now(), name: name, skills: skills, teamId: null });
         save();
-        e.target.reset();
+        event.target.reset();
         render();
       }
     } else {

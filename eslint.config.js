@@ -5,7 +5,8 @@ module.exports = [
     files: ["**/*.js"],
     languageOptions: { ecmaVersion: 2022, sourceType: "script" },
     rules: {
-      // No rules yet: the workshop adds one per chapter.
+      // Readable: names say what they hold. No one-letter names, except i for a loop counter.
+      "id-length": ["error", { min: 2, exceptions: ["i"], properties: "never" }]
     }
   }
 ];
