@@ -16,10 +16,10 @@ Plain HTML, CSS and JavaScript. No build and no server: open `index.html` in a b
 
 - Data lives in each visitor's browser (`localStorage`, key `teamup`). Two visitors never see each other's sign-ups.
 - A team of 1 counts as valid: `MIN_TEAM` is defined but never used. Ask the organisers before changing it.
+- Sign-ups close at 23:59 Beirut time, the same minute for everyone. A page opened before the deadline can't submit after it.
 
 ## Known problems (fix them when you touch that code)
 
-- The deadline is read in each visitor's own time zone, the countdown goes negative after it, and sign-ups never close.
 - The admin password is in `app.js`, readable by anyone who opens the page.
 - What visitors type is shown as HTML: a name typed as `<b>Alex</b>` shows in bold, and code hidden in a name can run.
 
@@ -35,6 +35,7 @@ Plain HTML, CSS and JavaScript. No build and no server: open `index.html` in a b
 - **Simple.** A function has a complexity of 10 or less, nests at most 3 levels deep, and takes at most 4 inputs. Return early instead of nesting.
 - **Not repeated.** Each piece of logic has one home. Before you write code, search for code that already does it and reuse it. When you fix a bug, search for the same mistake everywhere else first. `npm run dups` fails on copy-pasted blocks.
 - **Tested.** Every fix starts with a test that fails without it. Write the expected results from the rule, not from the code. Test the edges: zero, the limit, one past it.
+- **Changed safely.** Plan before you change: list the edge cases and turn each one into a test. Then change in small steps, and run `npm run check` after each. After a change, list what you decided that I didn't ask for.
 ## How to work
 
 - Before you change code, explain what it does and what it decides. If something isn't written here, ask.

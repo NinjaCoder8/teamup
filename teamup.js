@@ -3,6 +3,8 @@
 
 const MAX_TEAM = 3;
 const MIN_TEAM = 2;
+// Sign-ups close at 23:59 Beirut time (UTC+2 in November), the same minute for everyone.
+const DEADLINE = new Date("2026-11-19T23:59:00+02:00");
 function membersOf(team, people) {
   return people.filter(person => person.teamId === team.id);
 }
@@ -21,6 +23,21 @@ function parseSkills(text) {
   const skills = text.split(",").map(skill => skill.trim()).filter(skill => skill !== "");
   return [...new Set(skills)];
 }
+
+function isOpen(now) {
+  return now < DEADLINE;
+}
+
+function timeLeft(now) {
+  if (!isOpen(now)) {
+    return "Sign-ups are closed";
+  }
+  const ms = DEADLINE - now;
+  const days = Math.floor(ms / 86400000);
+  const hours = Math.floor(ms / 3600000) % 24;
+  const minutes = Math.floor(ms / 60000) % 60;
+  return `Sign-ups close in ${days}d ${hours}h ${minutes}m`;
+}
 if (typeof module !== "undefined") {
-  module.exports = { MAX_TEAM, MIN_TEAM, membersOf, canJoin, matches, parseSkills };
+  module.exports = { MAX_TEAM, MIN_TEAM, DEADLINE, membersOf, canJoin, matches, parseSkills, isOpen, timeLeft };
 }

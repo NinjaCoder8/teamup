@@ -1,7 +1,6 @@
 // TeamUp: find teammates for Hack Night.
 // The page: data, rendering and events. TeamUp's rules are in teamup.js.
 
-const DEADLINE = new Date("2026-11-19T23:59:00");
 const ADMIN_PASSWORD = "hacknight2026";
 
 const SEED = {
@@ -91,11 +90,11 @@ function renderTeams() {
 }
 
 function renderCountdown() {
-  const ms = DEADLINE - new Date();
-  const days = Math.floor(ms / 86400000);
-  const hours = Math.floor(ms / 3600000) % 24;
-  const minutes = Math.floor(ms / 60000) % 60;
-  document.getElementById("countdown").textContent = `Sign-ups close in ${days}d ${hours}h ${minutes}m`;
+  const now = new Date();
+  document.getElementById("countdown").textContent = timeLeft(now);
+  for (const field of document.querySelectorAll("#signup input, #signup button")) {
+    field.disabled = !isOpen(now);
+  }
 }
 
 function render() {
@@ -106,6 +105,11 @@ function render() {
 
 function signUp(event) {
   event.preventDefault();
+  // Checked on submit, not on load: a page opened before the deadline can be submitted after it.
+  if (!isOpen(new Date())) {
+    alert("Sign-ups are closed.");
+    return;
+  }
   const name = document.getElementById("name").value.trim();
   if (name === "") {
     alert("Please enter your name.");
