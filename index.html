@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>TeamUp | Find your hackathon team</title>
+<!--
+  TeamUp: find teammates for Hack Night.
+  Built with AI in one evening. Works offline: just open this file in a browser.
+-->
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; background: #f4f5fb; color: #1b1d2a; }
+  header { padding: 32px 24px 28px; background: linear-gradient(120deg, #3a2bd8, #8a2be2); color: #fff; }
+  header h1 { margin: 0; font-size: 34px; }
+  header p { margin: 6px 0 0; opacity: .9; }
+  .countdown { margin-top: 14px; display: inline-block; padding: 8px 14px; border-radius: 10px; background: rgba(255,255,255,.16); font-weight: 600; }
+  main { max-width: 1000px; margin: 0 auto; padding: 24px; display: grid; gap: 28px; }
+  h2 { margin: 0 0 12px; font-size: 22px; }
+  .row { display: flex; gap: 10px; flex-wrap: wrap; }
+  input, select, button { font: inherit; padding: 10px 12px; border-radius: 10px; border: 1px solid #c9cbe0; }
+  button { background: #3a2bd8; color: #fff; border: 0; cursor: pointer; font-weight: 600; }
+  button.ghost { background: transparent; color: #3a2bd8; border: 1px solid #3a2bd8; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
+  .card { background: #fff; border-radius: 14px; padding: 16px; box-shadow: 0 2px 10px rgba(30,30,80,.07); }
+  .card h3 { margin: 0 0 6px; font-size: 18px; }
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+  .chip { padding: 3px 9px; border-radius: 99px; background: #ece9ff; color: #3a2bd8; font-size: 13px; }
+  .muted { color: #6b6f85; font-size: 14px; }
+  .full { color: #c0392b; font-weight: 600; }
+  footer { text-align: center; padding: 24px; color: #6b6f85; font-size: 13px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>TeamUp</h1>
+  <p>Find your team for Hack Night. Teams of 2 to 3 people. You can sign up solo and find a team here.</p>
+  <div class="countdown" id="countdown">Sign-ups close in ...</div>
+</header>
+
+<main>
+  <section>
+    <h2>Sign up solo</h2>
+    <form id="signup" class="row">
+      <input id="name" placeholder="Your name" required />
+      <input id="skills" placeholder="Skills, comma separated (React, Python...)" style="flex:1" />
+      <button type="submit">Sign up</button>
+    </form>
+  </section>
+
+  <section>
+    <h2>People looking for a team</h2>
+    <div class="row" style="margin-bottom:12px">
+      <input id="search" placeholder="Search by skill" style="flex:1" />
+    </div>
+    <div class="grid" id="people"></div>
+  </section>
+
+  <section>
+    <h2>Teams</h2>
+    <div class="row" style="margin-bottom:12px">
+      <input id="teamSearch" placeholder="Search teams by name or idea" style="flex:1" />
+    </div>
+    <div class="grid" id="teams"></div>
+  </section>
+</main>
+
+<footer>
+  TeamUp for Hack Night &middot; <button class="ghost" id="admin">Admin</button>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
