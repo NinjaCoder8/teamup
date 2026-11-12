@@ -47,30 +47,19 @@ function joinTeam(personId, teamId) {
   render();
 }
 
+// One rule for every search box: ignore capitals and extra spaces.
+function matches(text, query) {
+  const needle = query.trim().toLowerCase();
+  return needle === "" || text.toLowerCase().includes(needle);
+}
+
 function searchPeople(query) {
-  const list = data.people.filter(person => person.teamId === null);
-  const texts = list.map(person => person.skills.join(" "));
-  const results = [];
-  const needle = query.trim();
-  for (let i = 0; i < list.length; i++) {
-    if (needle === "" || texts[i].includes(needle)) {
-      results.push(list[i]);
-    }
-  }
-  return results;
+  const solo = data.people.filter(person => person.teamId === null);
+  return solo.filter(person => matches(person.skills.join(" "), query));
 }
 
 function searchTeams(query) {
-  const list = data.teams;
-  const texts = list.map(team => team.name + " " + team.idea);
-  const results = [];
-  const needle = query.trim();
-  for (let i = 0; i < list.length; i++) {
-    if (needle === "" || texts[i].includes(needle)) {
-      results.push(list[i]);
-    }
-  }
-  return results;
+  return data.teams.filter(team => matches(`${team.name} ${team.idea}`, query));
 }
 
 function personCard(person) {

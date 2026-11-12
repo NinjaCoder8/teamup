@@ -1,0 +1,12 @@
+{
+  "format": [
+    "javascript"
+  ],
+  "ignore": [
+    "**/node_modules/**"
+  ],
+  "exitCode": 1,
+  "reporters": [
+    "console"
+  ]
+}

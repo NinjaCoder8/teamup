@@ -5,8 +5,9 @@
   "description": "A hackathon team finder: the practice project for the maintainability workshop",
   "scripts": {
     "lint": "eslint .",
+    "dups": "jscpd .",
     "test": "node --test --test-reporter=spec",
-    "check": "npm run lint && npm test"
+    "check": "npm run lint && npm run dups && npm test"
   },
   "devDependencies": {
     "eslint": "10.13.0",
