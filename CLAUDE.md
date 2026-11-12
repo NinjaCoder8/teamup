@@ -6,7 +6,9 @@ Plain HTML, CSS and JavaScript. No build and no server: open `index.html` in a b
 ## Map
 
 - `index.html`: the page and its styles.
-- `app.js`: everything else: the data, rendering, search, sign-up, joining a team, the admin reset.
+- `teamup.js`: TeamUp's rules (team size, search, skills, the deadline), with no page in them.
+- `teamup.test.js`: the tests for those rules.
+- `app.js`: the page: the data, rendering, search, sign-up, joining a team, the admin reset.
 - `eslint.config.js`: the rules below, written as checks.
 - `.claude/settings.json`: runs `npm run check` after every edit Claude makes.
 - `.jscpd.json`: the settings for `npm run dups`, the copy-paste check.
@@ -32,6 +34,7 @@ Plain HTML, CSS and JavaScript. No build and no server: open `index.html` in a b
 - **Small.** A function stays under 30 lines. A file stays under 200 lines. If it grows past that, split it by what each part does.
 - **Simple.** A function has a complexity of 10 or less, nests at most 3 levels deep, and takes at most 4 inputs. Return early instead of nesting.
 - **Not repeated.** Each piece of logic has one home. Before you write code, search for code that already does it and reuse it. When you fix a bug, search for the same mistake everywhere else first. `npm run dups` fails on copy-pasted blocks.
+- **Tested.** Every fix starts with a test that fails without it. Write the expected results from the rule, not from the code. Test the edges: zero, the limit, one past it.
 ## How to work
 
 - Before you change code, explain what it does and what it decides. If something isn't written here, ask.

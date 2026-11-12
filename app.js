@@ -1,8 +1,6 @@
 // TeamUp: find teammates for Hack Night.
-// Built with AI in one evening. Works offline: just open index.html in a browser.
+// The page: data, rendering and events. TeamUp's rules are in teamup.js.
 
-const MAX_TEAM = 3;
-const MIN_TEAM = 2;
 const DEADLINE = new Date("2026-11-19T23:59:00");
 const ADMIN_PASSWORD = "hacknight2026";
 
@@ -31,13 +29,9 @@ function save() {
   localStorage.setItem("teamup", JSON.stringify(data));
 }
 
-function canJoin(team) {
-  return data.people.filter(person => person.teamId === team.id).length <= MAX_TEAM;
-}
-
 function joinTeam(personId, teamId) {
   const team = data.teams.find(entry => entry.id === teamId);
-  if (!canJoin(team)) {
+  if (!canJoin(team, data.people)) {
     alert("This team is full.");
     return;
   }
@@ -45,12 +39,6 @@ function joinTeam(personId, teamId) {
   person.teamId = teamId;
   save();
   render();
-}
-
-// One rule for every search box: ignore capitals and extra spaces.
-function matches(text, query) {
-  const needle = query.trim().toLowerCase();
-  return needle === "" || text.toLowerCase().includes(needle);
 }
 
 function searchPeople(query) {
@@ -79,7 +67,7 @@ function renderPeople() {
 }
 
 function teamCard(team, solo) {
-  const members = data.people.filter(person => person.teamId === team.id);
+  const members = membersOf(team, data.people);
   const names = members.map(member => member.name).join(", ") || "No members yet";
   const warning = members.length < 1 || members.length > MAX_TEAM ? '<p class="full">Not a valid team yet</p>' : "";
   const options = solo.map(person => `<option value="${person.id}">${person.name}</option>`).join("");
@@ -114,11 +102,6 @@ function render() {
   renderPeople();
   renderTeams();
   renderCountdown();
-}
-
-function parseSkills(text) {
-  const skills = text.split(",").map(skill => skill.trim()).filter(skill => skill !== "");
-  return [...new Set(skills)];
 }
 
 function signUp(event) {
