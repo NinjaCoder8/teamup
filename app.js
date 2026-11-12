@@ -127,35 +127,33 @@ function render() {
   renderCountdown();
 }
 
-document.getElementById("signup").addEventListener("submit", event => {
+function parseSkills(text) {
+  const skills = text.split(",").map(skill => skill.trim()).filter(skill => skill !== "");
+  return [...new Set(skills)];
+}
+
+function signUp(event) {
   event.preventDefault();
   const name = document.getElementById("name").value.trim();
-  const skillsText = document.getElementById("skills").value;
-  if (name !== "") {
-    if (data.people.length < 500) {
-      let skills = [];
-      if (skillsText !== "") {
-        for (const skill of skillsText.split(",")) {
-          if (skill.trim() !== "") {
-            if (!skills.includes(skill.trim())) {
-              skills.push(skill.trim());
-            }
-          }
-        }
-      }
-      if (skills.length > 0 || confirm("Sign up with no skills?")) {
-        data.people.push({ id: Date.now(), name: name, skills: skills, teamId: null });
-        save();
-        event.target.reset();
-        render();
-      }
-    } else {
-      alert("TeamUp is full.");
-    }
-  } else {
+  if (name === "") {
     alert("Please enter your name.");
+    return;
   }
-});
+  if (data.people.length >= 500) {
+    alert("TeamUp is full.");
+    return;
+  }
+  const skills = parseSkills(document.getElementById("skills").value);
+  if (skills.length === 0 && !confirm("Sign up with no skills?")) {
+    return;
+  }
+  data.people.push({ id: Date.now(), name: name, skills: skills, teamId: null });
+  save();
+  event.target.reset();
+  render();
+}
+
+document.getElementById("signup").addEventListener("submit", signUp);
 
 document.getElementById("search").addEventListener("input", render);
 document.getElementById("teamSearch").addEventListener("input", render);

@@ -9,7 +9,11 @@ module.exports = [
       "id-length": ["error", { min: 2, exceptions: ["i"], properties: "never" }],
       // Small: a function stays under 30 lines, a file under 200.
       "max-lines-per-function": ["error", { max: 30, skipBlankLines: true, skipComments: true }],
-      "max-lines": ["error", { max: 200, skipBlankLines: true, skipComments: true }]
+      "max-lines": ["error", { max: 200, skipBlankLines: true, skipComments: true }],
+      // Simple: few paths through a function, shallow nesting, few inputs.
+      "complexity": ["error", 10],
+      "max-depth": ["error", 3],
+      "max-params": ["error", 4]
     }
   }
 ];
