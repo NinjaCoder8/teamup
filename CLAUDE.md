@@ -28,6 +28,7 @@ Plain HTML, CSS and JavaScript. No build and no server: open `index.html` in a b
 ## Rules
 
 - **Readable.** Names say what they hold: no one-letter names, except `i` for a loop counter. When the code changes, update the map, the decisions and the known problems above.
+- **Small.** A function stays under 30 lines. A file stays under 200 lines. If it grows past that, split it by what each part does.
 ## How to work
 
 - Before you change code, explain what it does and what it decides. If something isn't written here, ask.

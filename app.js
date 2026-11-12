@@ -73,69 +73,58 @@ function searchTeams(query) {
   return results;
 }
 
-function render() {
-  // people looking for a team
+function personCard(person) {
+  const chips = person.skills.map(skill => `<span class="chip">${skill}</span>`).join("");
+  return `
+    <div class="card">
+      <h3>${person.name}</h3>
+      <div class="chips">${chips}</div>
+    </div>`;
+}
+
+function renderPeople() {
   const found = searchPeople(document.getElementById("search").value);
-  let peopleHtml = "";
-  for (const person of found) {
-    let chips = "";
-    for (const skill of person.skills) {
-      chips += `<span class="chip">${skill}</span>`;
-    }
-    peopleHtml += `
-      <div class="card">
-        <h3>${person.name}</h3>
-        <div class="chips">${chips}</div>
-      </div>`;
-  }
-  if (found.length === 0) {
-    peopleHtml = '<p class="muted">Nobody found.</p>';
-  }
-  document.getElementById("people").innerHTML = peopleHtml;
+  document.getElementById("people").innerHTML = found.length === 0
+    ? '<p class="muted">Nobody found.</p>'
+    : found.map(personCard).join("");
+}
 
-  // teams
+function teamCard(team, solo) {
+  const members = data.people.filter(person => person.teamId === team.id);
+  const names = members.map(member => member.name).join(", ") || "No members yet";
+  const warning = members.length < 1 || members.length > MAX_TEAM ? '<p class="full">Not a valid team yet</p>' : "";
+  const options = solo.map(person => `<option value="${person.id}">${person.name}</option>`).join("");
+  return `
+    <div class="card">
+      <h3>${team.name}</h3>
+      <p class="muted">${team.idea}</p>
+      <p>${names} <span class="muted">(${members.length}/${MAX_TEAM})</span></p>
+      ${warning}
+      <div class="row">
+        <select id="join-${team.id}">${options}</select>
+        <button onclick="joinTeam(Number(document.getElementById('join-${team.id}').value), ${team.id})">Join</button>
+      </div>
+    </div>`;
+}
+
+function renderTeams() {
   const solo = data.people.filter(person => person.teamId === null);
-  let teamsHtml = "";
-  for (const team of searchTeams(document.getElementById("teamSearch").value)) {
-    const members = data.people.filter(person => person.teamId === team.id);
-    let names = "";
-    for (const member of members) {
-      if (names !== "") {
-        names += ", ";
-      }
-      names += member.name;
-    }
-    if (names === "") {
-      names = "No members yet";
-    }
-    let warning = "";
-    if (members.length < 1 || members.length > MAX_TEAM) {
-      warning = '<p class="full">Not a valid team yet</p>';
-    }
-    let options = "";
-    for (const person of solo) {
-      options += `<option value="${person.id}">${person.name}</option>`;
-    }
-    teamsHtml += `
-      <div class="card">
-        <h3>${team.name}</h3>
-        <p class="muted">${team.idea}</p>
-        <p>${names} <span class="muted">(${members.length}/${MAX_TEAM})</span></p>
-        ${warning}
-        <div class="row">
-          <select id="join-${team.id}">${options}</select>
-          <button onclick="joinTeam(Number(document.getElementById('join-${team.id}').value), ${team.id})">Join</button>
-        </div>
-      </div>`;
-  }
-  document.getElementById("teams").innerHTML = teamsHtml;
+  const found = searchTeams(document.getElementById("teamSearch").value);
+  document.getElementById("teams").innerHTML = found.map(team => teamCard(team, solo)).join("");
+}
 
-  // countdown
+function renderCountdown() {
   const ms = DEADLINE - new Date();
   const days = Math.floor(ms / 86400000);
   const hours = Math.floor(ms / 3600000) % 24;
   const minutes = Math.floor(ms / 60000) % 60;
   document.getElementById("countdown").textContent = `Sign-ups close in ${days}d ${hours}h ${minutes}m`;
+}
+
+function render() {
+  renderPeople();
+  renderTeams();
+  renderCountdown();
 }
 
 document.getElementById("signup").addEventListener("submit", event => {
